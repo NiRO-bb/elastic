@@ -1,0 +1,32 @@
+services:
+  elastic-service:
+    build: .
+    ports:
+      - "8082:8082"
+    depends_on:
+      - elasticsearch
+    environment:
+      - SPRING_PROFILES_ACTIVE=prod
+    env_file:
+      - .env_prod
+    networks:
+      - producer-consumer
+
+  elasticsearch:
+    image: elasticsearch:8.17.10
+    ports:
+      - "9200:9200"
+    environment:
+      - discovery.type=single-node
+      - xpack.security.enabled=false
+    volumes:
+      - elasticsearch_data:/usr/share/elasticsearch/data
+    networks:
+      - producer-consumer
+
+volumes:
+  elasticsearch_data:
+
+networks:
+  producer-consumer:
+    external: true
