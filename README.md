@@ -39,6 +39,9 @@ This for interaction with other containers. But you must create this network man
 docker network create producer-consumer
 ```
 
+## API
+You can get API docs by http://localhost:8080/swagger-ui/index.html
+
 ## Contributing
 <a href="https://github.com/NiRO-bb/audit-listener/graphs/contributors/">Contributors</a>
 
