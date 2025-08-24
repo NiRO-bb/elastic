@@ -1,5 +1,6 @@
 package com.example.elastic_api_service.dto.wrapper;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -16,6 +17,7 @@ import java.util.Map;
 @AllArgsConstructor
 public class StatsWrapper {
 
+    @Schema(example = "{ \"grouping_value_1\": 12 , \"grouping_value_2\": 3 }")
     private Map<String, Long> stats;
 
 }

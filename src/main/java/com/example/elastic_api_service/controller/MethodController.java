@@ -1,8 +1,14 @@
 package com.example.elastic_api_service.controller;
 
+import com.example.elastic_api_service.dto.response.RequestResponse;
 import com.example.elastic_api_service.dto.wrapper.SearchWrapper;
 import com.example.elastic_api_service.dto.wrapper.StatsWrapper;
 import com.example.elastic_api_service.service.MethodService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -31,6 +37,27 @@ public class MethodController {
      * @param level logging level of searched logs
      * @return
      */
+    @Operation(summary = "Performs full-text search",
+            description = """
+                    Performs full-text search by 'method' and 'body' fields using passed 'query' parameter; 
+                    'level' parameter is optional.
+                    """)
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Successful search",
+                    content = @Content(schema = @Schema(example = """
+                            {
+                                "results": [
+                                    {
+                                        "timestamp": "2025-08-24 16:17:37.010",
+                                        "method": "SomeClass.someMethod",
+                                        "body": "{ \"some_field\": \"some_value\" }"
+                                    }
+                                ]
+                            }
+                            """))),
+            @ApiResponse(responseCode = "500", description = "Some error occurred",
+                    content = @Content(schema = @Schema(type = "string", example = "Error message")))
+    })
     @GetMapping("/search")
     public ResponseEntity<?> search(
             @RequestParam String query,
@@ -47,6 +74,19 @@ public class MethodController {
      * @param to maximal date of searched logs
      * @return
      */
+    @Operation(summary = "Performs aggregation search",
+            description = """
+                    Performs aggregation search - 
+                    groups search results by some field whose name passed as 'groupBy' parameter;
+                    Performing query also affected by 'from' and 'to' parameters - 
+                    represents the earliest and latest timestamps accordingly of searched logs.
+                    """)
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Successful search",
+                    content = @Content(schema = @Schema(implementation = StatsWrapper.class))),
+            @ApiResponse(responseCode = "500", description = "Some error occurred",
+                    content = @Content(schema = @Schema(type = "string", example = "Error message")))
+    })
     @GetMapping("/stats")
     public ResponseEntity<?> stats(
             @RequestParam String groupBy,
@@ -64,6 +104,29 @@ public class MethodController {
      * @param eventType
      * @return
      */
+    @Operation(summary = "Performs exact match (passed values must match exactly with searched data)",
+            description = """
+                    Performs exact match by three fields ('method', 'level', 'eventType'); 
+                    Requires exact match with searched log field values; 
+                    Search is considered successful if at least one passed value matches; 
+                    'method' param can use wildcards (e.g. SomeClass.*).
+                    """)
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Successful search",
+                    content = @Content(schema = @Schema(example = """
+                            {
+                                "results": [
+                                    {
+                                        "timestamp": "2025-08-24 16:17:37.010",
+                                        "method": "SomeClass.someMethod",
+                                        "body": "{ \"some_field\": \"some_value\" }"
+                                    }
+                                ]
+                            }
+                            """))),
+            @ApiResponse(responseCode = "500", description = "Some error occurred",
+                    content = @Content(schema = @Schema(type = "string", example = "Error message")))
+    })
     @GetMapping
     public ResponseEntity<?> match(
             @RequestParam String method,
