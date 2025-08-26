@@ -1,0 +1,37 @@
+{
+  "properties": {
+    "body": {
+      "type": "text"
+    },
+    "cross_cutting_id": {
+      "type": "text"
+    },
+    "date": {
+      "type": "date",
+      "format": "strict_date_hour_minute_second_millis"
+    },
+    "id": {
+      "type": "text"
+    },
+    "logLevel": {
+      "type": "keyword"
+    },
+    "method": {
+      "type": "text",
+      "analyzer": "custom_analyzer",
+      "fields": {
+        "keyword": {
+          "type": "keyword"
+        }
+      }
+    },
+    "stage": {
+      "type": "text",
+      "fields": {
+        "keyword": {
+          "type": "keyword"
+        }
+      }
+    }
+  }
+}
